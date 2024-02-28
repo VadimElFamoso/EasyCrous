@@ -1,3 +1,4 @@
+//Paramètres généraux et module d'enregistrement des commandes
 const { Client, Events, GatewayIntentBits, Collection } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -13,7 +14,8 @@ const client = new Client({
 });
 
 client.once(Events.ClientReady, readyClient => {
-	console.log(`Ready! Logged in as ${readyClient.user.tag}`);
+	console.log(`${process.env.PREFIX} - Bot connecté à l'API (${readyClient.user.tag})`);
+	client.user.setPresence({ activities: [{ name: 'Made with <3 by Vadim2k!' }], status: 'online' });
 });
 
 client.commands = new Collection();
@@ -31,7 +33,7 @@ for (const folder of commandFolders) {
 		if ('data' in command && 'execute' in command) {
 			client.commands.set(command.data.name, command);
 		} else {
-			console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+			console.log(`${process.env.PREFIX} - Execute ou data manquant`);
 		}
 	}
 }
