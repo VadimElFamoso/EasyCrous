@@ -33,7 +33,7 @@ for (const folder of commandFolders) {
 		if ('data' in command && 'execute' in command) {
 			client.commands.set(command.data.name, command);
 		} else {
-			console.log(`${process.env.PREFIX} - Execute ou data manquant`);
+			console.log(`${process.env.PREFIX} - Execute ou data manquant`)
 		}
 	}
 }
@@ -59,6 +59,5 @@ client.on(Events.InteractionCreate, async interaction => {
 		}
 	}
 });
-
 
 client.login();
