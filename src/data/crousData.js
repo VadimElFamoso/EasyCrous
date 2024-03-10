@@ -29,6 +29,7 @@ async function getRestaurant(restaurant_id){
 
         for (let i = 0; i < data.restaurants.length; i++) {
             if(data.restaurants[i].id === restaurant_id){
+                //Un restaurant a été trouvé, retourne la carte du restaurant
                 return({
                     name: data.restaurants[i].name,
                     value: `Adresse : ${data.restaurants[i].adresse}`
@@ -39,11 +40,31 @@ async function getRestaurant(restaurant_id){
                     adresse: data.restaurants[i].adresse,
                 })
             }
+            //Aucun restaurant a été trouvé, retourne une erreur à l'utilisateur.
+            else{
+                return({
+                    name: `${process.env.PREFIX} - Une erreur a été détectée.`,
+                    value: `Aucun restaurant ne correspond à l'ID fournie : ${restaurant_id} n'est pas un ID de restaurant universitaire.`
+                })
+            }
         }
 
     } catch (error) {
         console.error(`${process.env.PREFIX} - Erreur lors de la récupération des restaurants : ${error}`);
         throw error;
+    }
+}
+
+function getMeals(restaurant_id){
+    try {
+        const response = await fetch('http://webservices-v2.crous-mobile.fr:8080/feed/nancy.metz/externe/crous-nancy.metz.json');
+        const data = await response.json();
+
+    } 
+    catch (error) {
+        console.error(`${process.env.PREFIX} - Erreur lors de la récupération du menu du restaurant ${data.restaurant[]}}`);
+        throw error;
+
     }
 }
 
