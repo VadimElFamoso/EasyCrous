@@ -1,4 +1,6 @@
-// crousData.js
+const { EmbedBuilder } = require("discord.js");
+
+//Fonction qui récupère l'entiéreté des restaurants universitaires
 async function getRestaurants() {
     try {
         const response = await fetch('http://webservices-v2.crous-mobile.fr:8080/feed/nancy.metz/externe/crous-nancy.metz.json');
@@ -9,7 +11,7 @@ async function getRestaurants() {
             let restaurant_status;
         
             restaurant_status = data.restaurants[i].closing === '0' ? true : false;
-            restaurant_status ? univ_restaurants.push(`${data.restaurants[i].title} - Statut : EN LIGNE : ✅ - ID : ${data.restaurants[i].id}`) : univ_restaurants.push(`${data.restaurants[i].title} - Statut : HORS LIGNE : ❌ - ID : ${data.restaurants[i]}`);
+            restaurant_status ? univ_restaurants.push(`${data.restaurants[i].title} - Statut : EN LIGNE : ✅ - ID : ${data.restaurants[i].id}`) : univ_restaurants.push(`${data.restaurants[i].title} - Statut : HORS LIGNE : ❌ `);
         }
 
         let message = univ_restaurants.join('\n');
@@ -23,48 +25,41 @@ async function getRestaurants() {
 }
 
 async function getRestaurant(restaurant_id){
-    try {
-        const response = await fetch('http://webservices-v2.crous-mobile.fr:8080/feed/nancy.metz/externe/crous-nancy.metz.json');
-        const data = await response.json();
+    const response = await fetch('http://webservices-v2.crous-mobile.fr:8080/feed/nancy.metz/externe/crous-nancy.metz.json');
+    const data = await response.json();
 
-        for (let i = 0; i < data.restaurants.length; i++) {
-            if(data.restaurants[i].id === restaurant_id){
-                //Un restaurant a été trouvé, retourne la carte du restaurant
-                return({
-                    name: data.restaurants[i].name,
-                    value: `Adresse : ${data.restaurants[i].adresse}`
-                },
-                {
-                    id: data.restaurants[i].id,
-                    photo: data.restaurants[i].photo.src ? data.restaurants[i].photo.src : 'https://cdn.discordapp.com/avatars/1067135462621319218/eaf032c7c7f6668f4a4d5909d2d29e02?size=1024',
-                    adresse: data.restaurants[i].adresse,
-                })
-            }
-            //Aucun restaurant a été trouvé, retourne une erreur à l'utilisateur.
-            else{
-                return({
-                    name: `${process.env.PREFIX} - Une erreur a été détectée.`,
-                    value: `Aucun restaurant ne correspond à l'ID fournie : ${restaurant_id} n'est pas un ID de restaurant universitaire.`
-                })
-            }
+    //Scan de l'entiéreté des restaurants universitaires
+    for(let i = 0; i < data.restaurants.length; i++){
+        //Un restaurant comportant l'ID fourni en args a été trouvé :
+        if(restaurant_id == data.restaurants[i].id){
+            return data.restaurants[i].title;
         }
-
-    } catch (error) {
-        console.error(`${process.env.PREFIX} - Erreur lors de la récupération des restaurants : ${error}`);
-        throw error;
     }
+
+    //Aucun restaurant comportant l'ID founi en args n'a été trouvé :
+    return `Aucun restaurant avec l'ID ${restaurant_id} n'a été trouvé.`
 }
 
-function getMeals(restaurant_id){
-    try {
-        const response = await fetch('http://webservices-v2.crous-mobile.fr:8080/feed/nancy.metz/externe/crous-nancy.metz.json');
-        const data = await response.json();
+async function getMeals(restaurant_id){
+    const response = await fetch('http://webservices-v2.crous-mobile.fr:8080/feed/nancy.metz/externe/crous-nancy.metz.json');
+    const data = await response.json();
 
-    } 
-    catch (error) {
-        console.error(`${process.env.PREFIX} - Erreur lors de la récupération du menu du restaurant ${data.restaurant[]}}`);
-        throw error;
-
+    for(let i = 0; i < data.restaurants.length; i++){
+        //Un restaurant comportant l'ID fourni en args a été trouvé :
+        if(restaurant_id == data.restaurants[i].id){
+            let meals;
+            const embed = new EmbedBuilder()
+                .setColor(14811402)
+                .setTitle(`Menu de ${data.restaurants[i].title}`)
+                .setDescription(`Bon appétit !`) //Mettre la date du jour
+                
+                //On construit les menus dans une embed :
+                data.restaurants[i].menus[0].meal[0].foodcategory[0].forEach(element => {
+                    
+                });
+                    
+                
+        }
     }
 }
 
