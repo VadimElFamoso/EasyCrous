@@ -47,20 +47,35 @@ async function getMeals(restaurant_id){
     for(let i = 0; i < data.restaurants.length; i++){
         //Un restaurant comportant l'ID fourni en args a été trouvé :
         if(restaurant_id == data.restaurants[i].id){
-            let meals;
+
             const embed = new EmbedBuilder()
                 .setColor(14811402)
                 .setTitle(`Menu de ${data.restaurants[i].title}`)
                 .setDescription(`Bon appétit !`) //Mettre la date du jour
                 
-                //On construit les menus dans une embed :
-                data.restaurants[i].menus[0].meal[0].foodcategory[0].forEach(element => {
-                    
-                });
-                    
+                let food_route = data.restaurants[i].menus[0].meal[0].foodcategory[0].dishes; //Data du crous
+                let dishes = food_route.filter((dish) => dish.length > 1); //Data construite
                 
+                //Titre des sections
+                let title = ['Entrées :', 'Plats :', 'Accompagnements :', 'Desserts :']
+                
+                //On purifie la data du crous :
+                console.log(dishes);
+                
+                //On addFields à l'embed :
+                for(let y = 0; y < dishes.length; y++){
+                    embed.addFields(
+                        {
+                            name: title[y],
+                            value: dishes[y]
+                        }
+                    )
+                }
+
+                //On retourne l'embed construite :
+                return embed;
         }
     }
 }
 
-module.exports = { getRestaurants, getRestaurant };
+module.exports = { getRestaurants, getRestaurant, getMeals };
